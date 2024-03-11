@@ -1,6 +1,6 @@
 import UIKit
 
-// Closures
+// ________________________Closures________________________
 
 // глобальна функція - кложура - це глобальна функція
 
@@ -60,7 +60,7 @@ closureWiyhReturnValue()
 print(randomResult)
 
 
-// ------------------- ЗАМИКАННЯ-------------------------
+// ---------------ЗАМИКАННЯ (completion)--------------------
 // тут вже використання кложур як ЗАМИКАННЯ - зазвичай пишуть як completion
 func doAnotherLogic(completion: () -> ()) {
     print("start doAnotherLogic") //для показу що почалось виконуватись
@@ -111,8 +111,116 @@ func doRandom(completion: () -> (Int)) {
 doRandom {
     return Int.random(in: 200...300)
 }
-// ------------------- ЗАМИКАННЯ-------------------------
+// --------------------- ЗАМИКАННЯ-------------------------
+//________________________Closures________________________
+
+
+// _______________________PROTOCOL________________________
+//  протокол - це інтерфейс. Те як має виглядати якийсь об'єкт - без реалізації
+//якби у нас був об'єкт юзера нам головне, щоб він міг робити прописане у протоколі
+
+protocol UserMainInfo {
+    func fullInfo() -> String
+    func printFullName()
+    
+    var age: Int {get set}
+}
+
+// маємо юзера, але нам треба, щоб він теж мав усе що нам головне (що прописали в протоколі) - і підпорядковуємо його Протоколу
+struct User: UserMainInfo {
+    // Properties
+    var firstName = ""
+    var lastName = ""
+    
+    //UserMainInfo
+    func fullInfo() -> String {
+        return firstName + " " + lastName
+    }
+    
+    func printFullName() {
+        //
+    }
+    
+    var age: Int = 24
+}
+
+
+class Admin {
+    var nikname = ""
+    var email = ""
+}
+
+// маємо Адміна, але нам треба, щоб він теж мав усе що нам головне (що прописали в протоколі) і підпорядковуємо його Протоколу через екстеншн
+
+extension Admin: UserMainInfo {
+    func fullInfo() -> String {
+        return nikname
+    }
+    
+    func printFullName() {
+        //
+    }
+    
+    var age: Int {
+        get {
+            return 23
+        }
+        set {
+            
+        }
+    }
+}
+// !!! Є різниця між тим як ми передаємо дані, коли відразу наслідуємо від протоколу і коли робимо екстенншн. В екстеншн ми маємо вказати і гетер і сетер, якщо є обидва6 коли напряму структуру підпорядковуємось, то можемо тільки сетер наприуклад, або нічого...
+
+
+//-----------------
+//Instans - об'єкт коли дужки є після класу чи стркутупи чи енума
+
+//var users: [Admin(), User()] так не можемо зробити бо типи різні
+var users: [UserMainInfo] = [Admin(), User()] // так тепер можемо, бо їх об'єднує протокол (бо мають спільний інтерфейс - протокол тобто)
+
+users[1].age // можемо доступитися до певних даних структури
+
+var currentUser: UserMainInfo?
+currentUser = Admin()
+currentUser = User()
+
+currentUser?.fullInfo()
+
+// може підтримувати 2 протоколи і протоколи наслідуваться один від одного, але тоді той протокол який наслідуєт має виконати функціоннал обох протоколів
 
 
 
-// extansion
+// ________________________GET SET_________________________
+// Переслухати ще раз в лекції
+
+// І далі передивитися - про дефолтні функціїї в екстеншенах до протоколів
+
+// ________________________Generic__________________________
+
+// Generic - часто питають що такого класного є в Swift і власнне Generic (почитати приклади в документаціїї)
+
+func printIntValue(intValue: Int) {
+    print(intValue)
+}
+
+printIntValue(intValue: 23)
+
+// а значення приходвть не в int А в Double
+// Окей треба нова функція
+func printdoubleValue(doubleValue: Double) {
+    print(doubleValue)
+}
+printdoubleValue(doubleValue: 34.0)
+
+// так як Swift строго типізовани, важко працювати коли приходять різні значення - тому є Generic
+
+func printAnyCustomerValue<T>(value: T) {
+    print(value)
+}
+
+printAnyCustomerValue(value: 34.0)
+printAnyCustomerValue(value: "text")
+printAnyCustomerValue(value: 123)
+
+// Accооціате велью - працює так і з протоколами - далі будемо розглядати
