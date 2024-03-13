@@ -43,6 +43,8 @@ let closureWiyhParameters: (Int) -> () = { intValue in
 
 closureWiyhParameters(21)
 
+
+
 // коли кложура ннічого не приймає, але повертає - ми не вказуємо назву параметру що входить, і маємо повернути значення вказаного типу
 //щодо прописуванння return або ні - можуть бути правила на проекті, що усі пишкуть, навіть коли один рядок і по факту можнна не писати
 var closureWiyhReturnValue: () -> (Int) = {
@@ -89,7 +91,7 @@ print("\n\n")
 doAnotherLogic { //[someResult] in - тут не працює, бо треба ще параметри в [], потім будемо розглядати
     someResult = "another data in closure"
     print(someResult)
-    
+
     DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
         print("main.asyncAfter before is: \(someResult)")
         print("5 sec left") // тут прописуємо, що ми хочемо виконати у completion у кложурі doAnotherLogic (але виконається уже після 2 принтів в кложурі, бо виконається через 5 секунд)
@@ -111,6 +113,18 @@ func doRandom(completion: () -> (Int)) {
 doRandom {
     return Int.random(in: 200...300)
 }
+
+// варіант з прийманням знначення і записом його у комплішн
+func loadData(completion: (Int) -> ()) {
+    print("start loadData") //для показу що почалось виконуватись
+    completion(Int.random(in: 200...300))
+    print("finish loadData") //для показу що закінчило виконуватись
+}
+
+loadData { data in // в data будуть передаватись значення передані у completion під час створення функції loadData вижче
+    print("Result of loadData = \(data)")
+}
+
 // --------------------- ЗАМИКАННЯ-------------------------
 //________________________Closures________________________
 
@@ -180,6 +194,7 @@ extension Admin: UserMainInfo {
 var users: [UserMainInfo] = [Admin(), User()] // так тепер можемо, бо їх об'єднує протокол (бо мають спільний інтерфейс - протокол тобто)
 
 users[1].age // можемо доступитися до певних даних структури
+users[0].age
 
 var currentUser: UserMainInfo?
 currentUser = Admin()
